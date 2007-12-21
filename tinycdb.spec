@@ -21,6 +21,7 @@ License:	Public Domain
 Group:		Databases
 URL:		http://www.corpit.ru/mjt/tinycdb.html
 Source0:	ftp://ftp.corpit.ru/pub/tinycdb/%{name}-%{version}.tar.bz2
+BuildRoot:	%{_tmppath}/%{name}-%{version}-root
 
 %description
 Tinycdb is a small, fast and reliable utility set and subroutine
