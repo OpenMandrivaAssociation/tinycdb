@@ -5,7 +5,7 @@
 
 %define	name	tinycdb
 %define	version	0.74
-%define	release	%mkrel 7
+%define	release	%mkrel 8
 %define major 1
 %define libcmajor 2
 
