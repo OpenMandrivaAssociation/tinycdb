@@ -1,11 +1,6 @@
-# compatability macros
-%{?!mkrel:%define mkrel(c:) %{-c: 0.%{-c*}.}%{!?_with_unstable:%(perl -e '$_="%{1}";m/(.\*\\D\+)?(\\d+)$/;$rel=${2}-1;re;print "$1$rel";').%{?subrel:%subrel}%{!?subrel:1}.%{?distversion:%distversion}%{?!distversion:%(echo $[%{mdkversion}/10])}}%{?_with_unstable:%{1}}%{?distsuffix:%distsuffix}%{?!distsuffix:mdk}}
-
-%{?!_with_unstable: %{error:%(echo -e "\n\n\nYou are building package for a stable release, please see \nhttp://qa.mandrakesoft.com/twiki/bin/view/Main/DistroSpecificReleaseTag\nif you think this is incorrect\n\n\n ")}%(sleep 2)}
-
 %define	name	tinycdb
-%define	version	0.74
-%define	release	%mkrel 8
+%define	version	0.77
+%define	release	%mkrel 1
 %define major 1
 %define libcmajor 2
 
@@ -20,7 +15,7 @@ Release:	%{release}
 License:	Public Domain
 Group:		Databases
 URL:		http://www.corpit.ru/mjt/tinycdb.html
-Source0:	ftp://ftp.corpit.ru/pub/tinycdb/%{name}-%{version}.tar.bz2
+Source0:	http://www.corpit.ru/mjt/tinycdb/%{name}_%{version}.tar.bz2
 BuildRoot:	%{_tmppath}/%{name}-%{version}-root
 
 %description
@@ -42,6 +37,7 @@ structure is tuned for fast reading:
 %package -n nss_%{name}
 Summary: Constant database library
 Group: System/Libraries
+
 %description -n nss_%{name}
 The tinycdb nss library allows creating passwd/group file using a
 constant database.
@@ -49,6 +45,7 @@ constant database.
 %package -n %{libname}
 Summary: Constant database library
 Group: System/Libraries
+
 %description -n %{libname}
 Tinycdb is a small, fast and reliable utility set and subroutine
 library for creating and reading constant databases. The database
@@ -60,6 +57,8 @@ Group: Development/Databases
 Requires: %{libname} = %{version}-%{release}
 Provides: lib%{name}-devel = %{version}-%{release}
 Conflicts: cdb-devel
+Requires: pkgconfig
+
 %description -n %{dlibname}
 Libraries and header files needed to develop applications using
 constant databases.
@@ -68,13 +67,21 @@ constant databases.
 %setup -q -n %{name}-%{version}
 
 %build
-%make CFLAGS="$RPM_OPT_FLAGS" all pic shared nss
+%make CFLAGS="$RPM_OPT_FLAGS" \
+ staticlib sharedlib cdb-shared nss \
+ sysconfdir=%{_sysconfdir}
 
 %install
 [ "%{buildroot}" != "/" ] && rm -rf %{buildroot}
 mkdir -p %{buildroot}
-%makeinstall syslibdir=%{buildroot}/%{_lib} \
-	install-all install-nss install-shared
+%makeinstall DESTDIR=%{buildroot} \
+ libdir=%{_libdir} bindir=%{_bindir} mandir=%{_mandir} \
+ syslibdir=/%{_lib} sysconfdir=%{_sysconfdir} \
+ includedir=%{_includedir} \
+ install-all install-nss install-piclib install-sharedlib \
+ INSTALLPROG=cdb-shared CP="cp -p"
+mkdir -p %{buildroot}%{_libdir}/pkgconfig
+cp -p debian/libcdb.pc %{buildroot}%{_libdir}/pkgconfig
 rm -f %{buildroot}%{_sysconfdir}/cdb-Makefile
 
 %clean
@@ -82,28 +89,24 @@ rm -f %{buildroot}%{_sysconfdir}/cdb-Makefile
 
 %if %mdkversion < 200900
 %post -n nss_%{name} -p /sbin/ldconfig
-%endif
-%if %mdkversion < 200900
-%postun -n nss_%{name} -p /sbin/ldconfig
-%endif
 
-%if %mdkversion < 200900
+%postun -n nss_%{name} -p /sbin/ldconfig
+
 %post -n %{libname} -p /sbin/ldconfig
-%endif
-%if %mdkversion < 200900
+
 %postun -n %{libname} -p /sbin/ldconfig
 %endif
 
 %files 
 %defattr(-,root,root)
-%doc NEWS ChangeLog
 %{_bindir}/cdb
 %{_mandir}/man1/cdb.1*
 %{_mandir}/man5/cdb.5*
+%doc ChangeLog NEWS debian/changelog
 
 %files -n nss_tinycdb
 %defattr(-,root,root)
-%doc cdb-Makefile
+%doc nss_cdb-Makefile
 /%{_lib}/libnss_cdb.so.%{libcmajor}
 
 %files -n %{libname}
@@ -112,8 +115,10 @@ rm -f %{buildroot}%{_sysconfdir}/cdb-Makefile
 
 %files -n %{dlibname}
 %defattr(-,root,root)
-%{_includedir}/*
+%{_includedir}/cdb.h
 %{_libdir}/libcdb.a
+%{_libdir}/libcdb_pic.a
 %{_libdir}/libcdb.so
+%{_libdir}/pkgconfig/libcdb.pc
 %{_mandir}/man3/cdb.3*
 
