@@ -13,7 +13,7 @@ License:	Public Domain
 Group:		Databases
 URL:		http://www.corpit.ru/mjt/tinycdb.html
 Source0:	http://www.corpit.ru/mjt/tinycdb/%{name}_%{version}.tar.bz2
-
+Source100:	tinycdb.rpmlintrc
 %description
 Tinycdb is a small, fast and reliable utility set and subroutine
 library for creating and reading constant databases. The database
