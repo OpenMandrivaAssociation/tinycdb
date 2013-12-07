@@ -8,7 +8,7 @@
 Summary:	Constant Database
 Name:		tinycdb
 Version:	0.77
-Release:	9
+Release:	10
 License:	Public Domain
 Group:		Databases
 URL:		http://www.corpit.ru/mjt/tinycdb.html
