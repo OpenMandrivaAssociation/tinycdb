@@ -1,5 +1,6 @@
 %define major 1
 %define libcmajor 2
+%define _disable_lto 1
 
 # Macro: %%{mklibname <name> [<major> [<minor>]] [-s] [-d]}
 %define libname %mklibname %{name} %{major}
