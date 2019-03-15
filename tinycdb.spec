@@ -1,15 +1,17 @@
 %define major 1
 %define libcmajor 2
+# For static lib
 %define _disable_lto 1
 
 # Macro: %%{mklibname <name> [<major> [<minor>]] [-s] [-d]}
 %define libname %mklibname %{name} %{major}
-%define dlibname %mklibname %{name} %{major} -d
+%define dlibname %mklibname %{name} -d
+%define olddlibname %mklibname %{name} %{major} -d
 
 Summary:	Constant Database
 Name:		tinycdb
 Version:	0.78
-Release:	1
+Release:	2
 License:	Public Domain
 Group:		Databases
 URL:		http://www.corpit.ru/mjt/tinycdb.html
@@ -51,9 +53,10 @@ structure is tuned for fast reading.
 %package -n %{dlibname}
 Summary:	Development libraries and headers for %{libname}
 Group:		Development/Databases
-Requires:	%{libname} = %{version}-%{release}
-Provides:	lib%{name}-devel = %{version}-%{release}
+Requires:	%{libname} = %{EVRD}
+Provides:	lib%{name}-devel = %{EVRD}
 Conflicts:	cdb-devel
+%rename %{olddlibname}
 
 %description -n %{dlibname}
 Libraries and header files needed to develop applications using
