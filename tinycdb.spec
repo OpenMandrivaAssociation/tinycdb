@@ -8,12 +8,12 @@
 
 Summary:	Constant Database
 Name:		tinycdb
-Version:	0.77
-Release:	17
+Version:	0.78
+Release:	1
 License:	Public Domain
 Group:		Databases
 URL:		http://www.corpit.ru/mjt/tinycdb.html
-Source0:	http://www.corpit.ru/mjt/tinycdb/%{name}_%{version}.tar.bz2
+Source0:	http://www.corpit.ru/mjt/tinycdb/%{name}-%{version}.tar.gz
 Source100:	tinycdb.rpmlintrc
 %description
 Tinycdb is a small, fast and reliable utility set and subroutine
@@ -76,7 +76,17 @@ mkdir -p %{buildroot}
  install-all install-nss install-piclib install-sharedlib \
  INSTALLPROG=cdb-shared CP="cp -p"
 mkdir -p %{buildroot}%{_libdir}/pkgconfig
-cp -p debian/libcdb.pc %{buildroot}%{_libdir}/pkgconfig
+cat >%{buildroot}%{_libdir}/pkgconfig/libcdb.pc <<EOF
+prefix=%{_prefix}
+exec_prefix=\${prefix}
+libdir=\${exec_prefix}/%{_lib}
+includedir=\${prefix}/include
+
+Name: libcdb
+Description: tinycdb - Constant Data Base library
+Version: %{version}
+Libs: -lcdb
+EOF
 rm -f %{buildroot}%{_sysconfdir}/cdb-Makefile
 
 # Fix permissions to avoid unstripped-binary-or-object
@@ -103,54 +113,3 @@ chmod 0755 %{buildroot}%{_libdir}/libcdb.so.%{major}
 %{_libdir}/libcdb.so
 %{_libdir}/pkgconfig/libcdb.pc
 %{_mandir}/man3/cdb.3*
-
-
-
-%changelog
-* Fri May 06 2011 Oden Eriksson <oeriksson@mandriva.com> 0.77-3mdv2011.0
-+ Revision: 670707
-- mass rebuild
-
-* Fri Dec 03 2010 Oden Eriksson <oeriksson@mandriva.com> 0.77-2mdv2011.0
-+ Revision: 607999
-- rebuild
-
-* Sun Jan 24 2010 Luca Berra <bluca@mandriva.org> 0.77-1mdv2010.1
-+ Revision: 495485
-- new version 0.77
-
-* Wed Sep 09 2009 Thierry Vignaud <tv@mandriva.org> 0.74-8mdv2010.0
-+ Revision: 434389
-- rebuild
-
-* Sun Aug 03 2008 Thierry Vignaud <tv@mandriva.org> 0.74-7mdv2009.0
-+ Revision: 261542
-- rebuild
-
-* Wed Jul 30 2008 Thierry Vignaud <tv@mandriva.org> 0.74-6mdv2009.0
-+ Revision: 254562
-- rebuild
-
-  + Pixel <pixel@mandriva.com>
-    - do not call ldconfig in %%post/%%postun, it is now handled by filetriggers
-
-  + Olivier Blin <oblin@mandriva.com>
-    - restore BuildRoot
-
-* Mon Dec 17 2007 Thierry Vignaud <tv@mandriva.org> 0.74-4mdv2008.1
-+ Revision: 128462
-- kill re-definition of %%buildroot on Pixel's request
-- import tinycdb
-
-
-* Sun Aug 28 2005 Luca Berra <bluca@vodka.it> 0.74-4mdk
-- rebuild
-
-* Fri Apr 15 2005 Luca Berra <bluca@vodka.it> 0.74-3mdk
-- %%mkrel tag, rebuild
-
-* Wed Feb 25 2004 Luca Berra <bluca@vodka.it> 0.74-2mdk
-- CFL: cdb-devel
-
-* Mon Jan 19 2004 Luca Berra <bluca@vodka.it> 0.74-1mdk
-- Initial mandrake contrib
