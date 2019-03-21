@@ -67,6 +67,7 @@ constant databases.
 
 %build
 %make CFLAGS="%{optflags}" \
+ CC=%{__cc} \
  staticlib sharedlib cdb-shared nss \
  sysconfdir=%{_sysconfdir}
 
