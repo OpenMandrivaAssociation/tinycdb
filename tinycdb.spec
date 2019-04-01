@@ -75,6 +75,7 @@ constant databases.
 mkdir -p %{buildroot}
 %makeinstall DESTDIR=%{buildroot} \
  libdir=%{_libdir} bindir=%{_bindir} mandir=%{_mandir} \
+ CC=%{__cc} \
  syslibdir=/%{_lib} sysconfdir=%{_sysconfdir} \
  includedir=%{_includedir} \
  install-all install-nss install-piclib install-sharedlib \
