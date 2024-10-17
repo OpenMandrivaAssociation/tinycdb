@@ -14,7 +14,7 @@ Version:	0.78
 Release:	3
 License:	Public Domain
 Group:		Databases
-URL:		http://www.corpit.ru/mjt/tinycdb.html
+URL:		https://www.corpit.ru/mjt/tinycdb.html
 Source0:	http://www.corpit.ru/mjt/tinycdb/%{name}-%{version}.tar.gz
 Source100:	tinycdb.rpmlintrc
 %description
